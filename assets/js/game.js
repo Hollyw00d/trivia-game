@@ -73,4 +73,40 @@ $(document).ready(function() {
     d. "Where do you work, a toilet store?"
     */
 
+    /*      
+    2. What is Ron's middle name?
+    ANSWER: c. Beverly
+    a. Shirley
+    b. Brandie
+    c. Beverly
+    d. Marianne
+    */
+
+    var questionsAndAnswers = [
+        {
+            // Correct anwer is:
+            // 0. "Mmm. I look good."
+            question: "What are Ron Burgundy's first words spoken in the movie?",
+            answers: [
+                "Mmm. I look good.",
+                "How now brown cow.",
+                "Great Odin's raven!",
+                "Hey, everyone! Come and see how good I look!"
+            ],
+            correctAnswer: 0
+        },
+        {
+            // Correct anwer is:
+            // 2. "Beverly"
+            question: "What is Ron's middle name?",
+            answers: [
+                "Shirley",
+                "Brandie",
+                "Beverly",
+                "Marianne"
+            ],
+            correctAnswer: 0
+        }
+    ];
+
 });

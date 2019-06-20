@@ -13,3 +13,10 @@ Trivia Game for UW Coding Bootcamp
 9. At end of quiz show percentage right answers and right and wrong answers.
 10. At end of quiz show right answers.
 11. At end of quiz play YouTube clip of "Anchor Man".
+
+## JavaScript Pseudo Coding
+1. Game starts and message is "Click button to start trivia quiz". Put start message into object.
+2. Button says "Start Quiz" to start game. Button properties into object.
+3. Before clicking "Start Quiz" hide appropriate elements.
+3. After clicking "Start Quiz" button start timer.
+4. Create array of objects with questions, answers, correct answer.
