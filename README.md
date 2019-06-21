@@ -20,3 +20,13 @@ Trivia Game for UW Coding Bootcamp
 3. Before clicking "Start Quiz" hide appropriate elements.
 3. After clicking "Start Quiz" button start timer.
 4. Create array of objects with questions, answers, correct answer.
+5. Start timer on a click.
+6. Do something when timer runs out (display if person got correct answer or wrong answer, and if wrong show correct answer).
+7. Use setInterval or setTimeout to display correct or wrong answer after button submit. Will also need to clearInterval or clearTimeout.
+8. Store corrrect or wrong answer in another array.
+9. At end show tally of correct and wrong answers, including percentage right.
+10. Create a reset function, using the #answer-submit button.
+11. Record radio button selection on click, when answering a question.
+12. Add radio buttons with name attribute and different value attributes. Then when I click submit button I'll get the value attribute.
+13. Use link below to get different value attributes:
+https://www.tutorialrepublic.com/faq/how-to-get-the-value-of-selected-radio-button-using-jquery.php 

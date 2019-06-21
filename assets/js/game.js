@@ -105,8 +105,11 @@ $(document).ready(function() {
                 "Beverly",
                 "Marianne"
             ],
-            correctAnswer: 0
+            correctAnswer: 2
         }
     ];
+
+
+
 
 });
