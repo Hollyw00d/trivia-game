@@ -1,4 +1,12 @@
 $(document).ready(function() {
+
+    // Get HTML elements in variables
+    var $questionsMessages = $('#questions-messages');
+    var $questionsHeading = $('#questions-heading');
+    var $questionsQuestion = $('#questions-question');
+    var questionsMultipleChoice = $('#questions-multiple-choice');
+    var $answerSubmit = $('#answer-submit');
+
     /*
     "Anchor Man" movie trivia quiz
     
@@ -153,11 +161,6 @@ $(document).ready(function() {
             // index of answers array
             correctAnswer: 2
         },
-
-
-
-
-
         {
             // Question 6
             // Correct anwer is:
@@ -200,11 +203,6 @@ $(document).ready(function() {
             // index of answers array
             correctAnswer: 1
         },
-
-
-
-
-
         {
             // Question 9
             // Correct anwer is:
@@ -234,5 +232,20 @@ $(document).ready(function() {
             correctAnswer: 0
         }
     ];
+
+    var playGame = {
+        startGame: false,
+        reset: function() {
+            $questionsMessages
+                .text('Click Button to Start Trivia Quiz')
+                .removeClass('d-none');
+            $answerSubmit
+                .text('Start Quiz');    
+        }
+    };
+
+    if(!playGame.startGame) {
+        playGame.reset();
+    }
 
 });
