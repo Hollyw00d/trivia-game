@@ -82,8 +82,10 @@ $(document).ready(function() {
     d. Marianne
     */
 
+    // Questions and answers object
     var questionsAndAnswers = [
         {
+            // Question 1
             // Correct anwer is:
             // 0. "Mmm. I look good."
             question: "What are Ron Burgundy's first words spoken in the movie?",
@@ -93,9 +95,11 @@ $(document).ready(function() {
                 "Great Odin's raven!",
                 "Hey, everyone! Come and see how good I look!"
             ],
+            // index of answers array
             correctAnswer: 0
         },
         {
+            // Question 2
             // Correct anwer is:
             // 2. "Beverly"
             question: "What is Ron's middle name?",
@@ -106,10 +110,129 @@ $(document).ready(function() {
                 "Marianne"
             ],
             correctAnswer: 2
+        },
+        {
+            // Question 3
+            // Correct anwer is:
+            // 1. "A hobo"
+            question: "According to the movie narrator, what does Sinatra look like compared to Ron in one of his fine suits?",
+            answers: [
+                "A bum",
+                "A hobo",
+                "A poser",
+                "A wannabe"
+            ],
+            // index of answers array
+            correctAnswer: 1
+        },
+        {
+            // Question 4
+            // Correct anwer is:
+            // 3. "We Spit in Your Food"
+            question: "What does the \"Escupimos en su Alimento\" restaurant mean in English, that Veronica and the ladies from the station visit?",
+            answers: [
+                "I Spit in Your Food",
+                "I Blow my Nose in Your Food",
+                "I Give you Food for Free",
+                "We Spit in Your Food"
+            ],
+            // index of answers array
+            correctAnswer: 3
+        },
+        {
+            // Question 5
+            // Correct anwer is:
+            // 2. "Journalism"
+            question: "What degree did Will Ferrell graduate from in college?",
+            answers: [
+                "English",
+                "Creative Writing",
+                "Journalism",
+                "Communications"
+            ],
+            // index of answers array
+            correctAnswer: 2
+        },
+
+
+
+
+
+        {
+            // Question 6
+            // Correct anwer is:
+            // 3. "Baxter"
+            question: "What is the name of Ron's dog?",
+            answers: [
+                "Quincy",
+                "Ronny",
+                "Sparky",
+                "Baxter"
+            ],
+            // index of answers array
+            correctAnswer: 3
+        },
+        {
+            // Question 7
+            // Correct anwer is:
+            // 2. "IM #1"
+            question: "What is Ron's license plate number?",
+            answers: [
+                "SAN DIEGO",
+                "#1 NEWS",
+                "IM #1",
+                "ANCHOR"
+            ],
+            // index of answers array
+            correctAnswer: 2
+        },
+        {
+            // Question 8
+            // Correct anwer is:
+            // 2. "Jazz flute"
+            question: "In the night club, what instrument does Ron play?",
+            answers: [
+                "Classical harp",
+                "Jazz flute",
+                "Jazz saxophone",
+                "Jazz trumpet"
+            ],
+            // index of answers array
+            correctAnswer: 1
+        },
+
+
+
+
+
+        {
+            // Question 9
+            // Correct anwer is:
+            // 3. "Throw a man into a car windshield that breaks."
+            question: "What does Champ (the sports anchor from Ron's news team) do in the fight with a rival news team?",
+            answers: [
+                "Kick another man in the crotch.",
+                "Scream and run away.",
+                "Use the Spock pinch to subdue a man.",
+                "Throw a man into a car windshield that breaks."
+            ],
+            // index of answers array
+            correctAnswer: 3
+        },
+        {
+            // Question 10
+            // Correct anwer is:
+            // 0. Where'd you get those clothes from, the toilet store?
+            question: "What diss does Brick Tamland (weather man from Ron's new team) tell the rival news team?",
+            answers: [
+                "Where'd you get those clothes from, the toilet store?",
+                "Who's your mom, Mother Teresa?",
+                "You smell like a moldy car!",
+                "Where do you work, a toilet store?"
+            ],
+            // index of answers array
+            correctAnswer: 0
         }
     ];
-
-
-
 
 });
