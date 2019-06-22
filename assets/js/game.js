@@ -235,17 +235,27 @@ $(document).ready(function() {
 
     var playGame = {
         startGame: false,
+        questionCount: 1,
         reset: function() {
             $questionsMessages
                 .text('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
             $answerSubmit
                 .text('Start Quiz');    
+        },
+        startGameFunc: function() {
+            this.startGame = true;
+            $answerSubmit
+                .text('Submit Answer');
         }
     };
 
     if(!playGame.startGame) {
         playGame.reset();
     }
+
+    $answerSubmit.on('click', function() {
+        playGame.startGameFunc();
+    });
 
 });
