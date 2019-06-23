@@ -4,9 +4,8 @@ $(document).ready(function() {
     var $timer = $('#timer');
     var $timerSpan = $timer.find('span');
     var $questionsMessages = $('#questions-messages');
-    var $questionsHeading = $('#questions-heading');
     var $questionsQuestion = $('#questions-question');
-    var questionsMultipleChoice = $('#questions-multiple-choice');
+    var $questionsMultipleChoice = $('#questions-multiple-choice');
     var $answerSubmit = $('#answer-submit');
 
     /*
@@ -237,7 +236,7 @@ $(document).ready(function() {
 
     var playGame = {
         startGame: false,
-        questionCount: 0,
+        currentQuestionArrIndex: 0,
         timer25SecCountDownStart: 11,
         clockRunning: false,
         convertedTime: 0,
@@ -251,8 +250,11 @@ $(document).ready(function() {
         startGameFunc: function() {
             if(!this.startGame) {
                 $answerSubmit.text('Submit Answer');
-                $timer.removeClass('d-none')
-                $timerSpan.text(11);
+                $timer.removeClass('d-none');
+                $timerSpan.text(this.timer25SecCountDownStart);
+                $questionsMessages
+                    .addClass('font-italic')
+                    .text('Game Started!');
                 this.startGame = true;  
             }
         },
@@ -287,6 +289,21 @@ $(document).ready(function() {
                 this.intervalId = setInterval(playGame.countDown, 1000);
                 this.clockRunning = true;
             }
+        },
+        populateQuestions: function(arrOfObjects) {
+            this.currentQuestionArrIndex = Number($questionsQuestion.attr('data-question-arr'));
+            switch(this.currentQuestionArrIndex) {
+                case 0:
+                    $questionsQuestion
+                        .removeClass('d-none')
+                        .text(questionsAndAnswers[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice.removeClass('d-none');
+                    questionsAndAnswers[this.currentQuestionArrIndex].answers.map(function(answer) {
+                        $questionsMultipleChoice
+                            .append('<li>' + answer + '</li>');
+                    });
+                    break;
+            }
         }
     };
 
@@ -297,6 +314,7 @@ $(document).ready(function() {
     $answerSubmit.on('click', function() {
         playGame.startGameFunc();
         playGame.start25SecCountDown();
+        playGame.populateQuestions(questionsAndAnswers);
     });
 
 });
