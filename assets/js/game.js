@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
     // Get HTML elements in variables
+    var $timer = $('#timer');
+    var $timerSpan = $timer.find('span');
     var $questionsMessages = $('#questions-messages');
     var $questionsHeading = $('#questions-heading');
     var $questionsQuestion = $('#questions-question');
@@ -233,54 +235,56 @@ $(document).ready(function() {
         }
     ];
 
-    /*
-    function timeConverter(t) {
-
-  //  Takes the current time in seconds and convert it to minutes and seconds (mm:ss).
-  var minutes = Math.floor(t / 60);
-  var seconds = t - (minutes * 60);
-
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-
-  if (minutes === 0) {
-    minutes = "00";
-  }
-
-  else if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-
-  return minutes + ":" + seconds;
-}
-    */
-
     var playGame = {
         startGame: false,
-        questionCount: 1,
+        questionCount: 0,
+        timer25SecCountDownStart: 25,
+        clockRunning: false,
+        convertedTime: 0,
+        intervalId: 0,
         reset: function() {
             $questionsMessages
                 .text('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
-            $answerSubmit
-                .text('Start Quiz');    
+            $answerSubmit.text('Start Quiz');    
         },
         startGameFunc: function() {
             if(!this.startGame) {
-                $answerSubmit
-                .text('Submit Answer');
+                $answerSubmit.text('Submit Answer');
+                $timer.removeClass('d-none')
+                $timerSpan.text(25);
                 this.startGame = true;  
+                this.false = true;
             }
         },
         timeConverter: function(t) {
             //  Takes the current time in seconds 
             // and convert it to seconds with two digits (ss).
-            var seconds = t - (minutes * 60);    
+            var seconds = t;  
+            console.log(seconds);  
             if (seconds < 10) {
-                seconds = "0" + seconds;
+                seconds = '0' + seconds;
             }
             return seconds;
+        },
+        countDown: function() {
+            playGame.timer25SecCountDownStart--;
+            playGame.convertedTime = playGame.timeConverter(playGame.timer25SecCountDownStart);
+            console.log(playGame.convertedTime);
+            $timerSpan.text(playGame.timeConverter(playGame.convertedTime));
+        },
+        start25SecCountDown: function() {
+            // if (!clockRunning) {
+            //     clearInterval(intervalId);
+            //     intervalId = setInterval(count, 1000);
+            //     clockRunning = true;
+            //   }
+
+            if (!this.clockRunning) {
+                clearInterval(this.intervalId);
+                this.intervalId = setInterval(playGame.countDown, 1000);
+                this.clockRunning = true;
+            }
         }
     };
 
@@ -290,6 +294,7 @@ $(document).ready(function() {
 
     $answerSubmit.on('click', function() {
         playGame.startGameFunc();
+        playGame.start25SecCountDown();
     });
 
 });
