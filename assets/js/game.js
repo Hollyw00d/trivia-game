@@ -238,7 +238,7 @@ $(document).ready(function() {
     var playGame = {
         startGame: false,
         questionCount: 0,
-        timer25SecCountDownStart: 25,
+        timer25SecCountDownStart: 11,
         clockRunning: false,
         convertedTime: 0,
         intervalId: 0,
@@ -252,7 +252,7 @@ $(document).ready(function() {
             if(!this.startGame) {
                 $answerSubmit.text('Submit Answer');
                 $timer.removeClass('d-none')
-                $timerSpan.text(25);
+                $timerSpan.text(11);
                 this.startGame = true;  
             }
         },
@@ -271,8 +271,12 @@ $(document).ready(function() {
 
             var current25SecCountDownTime = playGame.timeConverter(playGame.convertedTime);
 
-            if(current25SecCountDownTime.length) {
+            if(current25SecCountDownTime.length === 3) {
                 current25SecCountDownTime = current25SecCountDownTime.slice(1);
+            }
+            if(current25SecCountDownTime === '00') {
+                // Stop time at 0 or '00'
+                clearInterval(playGame.intervalId);
             }
 
             $timerSpan.text(current25SecCountDownTime);
