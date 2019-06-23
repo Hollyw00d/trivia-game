@@ -254,14 +254,12 @@ $(document).ready(function() {
                 $timer.removeClass('d-none')
                 $timerSpan.text(25);
                 this.startGame = true;  
-                this.false = true;
             }
         },
         timeConverter: function(t) {
             //  Takes the current time in seconds 
             // and convert it to seconds with two digits (ss).
             var seconds = t;  
-            console.log(seconds);  
             if (seconds < 10) {
                 seconds = '0' + seconds;
             }
@@ -270,16 +268,16 @@ $(document).ready(function() {
         countDown: function() {
             playGame.timer25SecCountDownStart--;
             playGame.convertedTime = playGame.timeConverter(playGame.timer25SecCountDownStart);
-            console.log(playGame.convertedTime);
-            $timerSpan.text(playGame.timeConverter(playGame.convertedTime));
+
+            var current25SecCountDownTime = playGame.timeConverter(playGame.convertedTime);
+
+            if(current25SecCountDownTime.length) {
+                current25SecCountDownTime = current25SecCountDownTime.slice(1);
+            }
+
+            $timerSpan.text(current25SecCountDownTime);
         },
         start25SecCountDown: function() {
-            // if (!clockRunning) {
-            //     clearInterval(intervalId);
-            //     intervalId = setInterval(count, 1000);
-            //     clockRunning = true;
-            //   }
-
             if (!this.clockRunning) {
                 clearInterval(this.intervalId);
                 this.intervalId = setInterval(playGame.countDown, 1000);
