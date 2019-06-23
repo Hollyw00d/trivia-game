@@ -233,6 +233,29 @@ $(document).ready(function() {
         }
     ];
 
+    /*
+    function timeConverter(t) {
+
+  //  Takes the current time in seconds and convert it to minutes and seconds (mm:ss).
+  var minutes = Math.floor(t / 60);
+  var seconds = t - (minutes * 60);
+
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+
+  if (minutes === 0) {
+    minutes = "00";
+  }
+
+  else if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+
+  return minutes + ":" + seconds;
+}
+    */
+
     var playGame = {
         startGame: false,
         questionCount: 1,
@@ -244,9 +267,20 @@ $(document).ready(function() {
                 .text('Start Quiz');    
         },
         startGameFunc: function() {
-            this.startGame = true;
-            $answerSubmit
+            if(!this.startGame) {
+                $answerSubmit
                 .text('Submit Answer');
+                this.startGame = true;  
+            }
+        },
+        timeConverter: function(t) {
+            //  Takes the current time in seconds 
+            // and convert it to seconds with two digits (ss).
+            var seconds = t - (minutes * 60);    
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            return seconds;
         }
     };
 
