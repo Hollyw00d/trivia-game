@@ -113,7 +113,8 @@ $(document).ready(function() {
                 "Hey, everyone! Come and see how good I look!"
             ],
             // index of answers array
-            correctAnswer: 0
+            correctAnswer: 0,
+            yourAnswer: ''
         },
         {
             // Question 2
@@ -126,7 +127,8 @@ $(document).ready(function() {
                 "Beverly",
                 "Marianne"
             ],
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 3
@@ -140,7 +142,8 @@ $(document).ready(function() {
                 "A wannabe"
             ],
             // index of answers array
-            correctAnswer: 1
+            correctAnswer: 1,
+            yourAnswer: ''
         },
         {
             // Question 4
@@ -154,7 +157,8 @@ $(document).ready(function() {
                 "We Spit in Your Food"
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 5
@@ -168,7 +172,8 @@ $(document).ready(function() {
                 "Communications"
             ],
             // index of answers array
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 6
@@ -182,7 +187,8 @@ $(document).ready(function() {
                 "Baxter"
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 7
@@ -196,7 +202,8 @@ $(document).ready(function() {
                 "ANCHOR"
             ],
             // index of answers array
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 8
@@ -210,7 +217,8 @@ $(document).ready(function() {
                 "Jazz trumpet"
             ],
             // index of answers array
-            correctAnswer: 1
+            correctAnswer: 1,
+            yourAnswer: ''
         },
         {
             // Question 9
@@ -224,7 +232,8 @@ $(document).ready(function() {
                 "Throw a man into a car windshield that breaks."
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 10
@@ -238,7 +247,8 @@ $(document).ready(function() {
                 "Where do you work, a toilet store?"
             ],
             // index of answers array
-            correctAnswer: 0
+            correctAnswer: 0,
+            yourAnswer: ''
         }
     ];
 
@@ -452,8 +462,22 @@ $(document).ready(function() {
                         playGame.clockRunning = false;
                         $timer.addClass('d-none');
                         for (var q in questionsAndAnswers) {
-                            $allQuestionsAnswers.append('<p>' + questionsAndAnswers[q].question + '</p>');
+                            if(questionsAndAnswers[q].correctAnswer === questionsAndAnswers[q].yourAnswer) {
+                                var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were correct!';
+                            }
+                            else {
+                                var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were wrong!';
+                            }
+
+                            $allQuestionsAnswers.append(
+                                '<p><strong>Question:</strong> ' + questionsAndAnswers[q].question + '<br />' +
+                                correctOrWrong + '<br />' + 
+                                'The correct answer was:<br />' + 
+                                abcdArr[questionsAndAnswers[q].correctAnswer] + '. ' + 
+                                questionsAndAnswers[q].answers[questionsAndAnswers[q].correctAnswer] + '</p>'
+                                );
                         }
+                        console.log(questionsAndAnswers);
                         break;                    
                     
 
@@ -479,9 +503,11 @@ $(document).ready(function() {
             
             if(selectedAnswer === correctAnswerIndex) {
                 $questionsMessages.html('You are correct! The answer to Question ' + (this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
             }
             else {
                 $questionsMessages.html('You are wrong! The answer is to Question ' +(this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
             }
             
         }
