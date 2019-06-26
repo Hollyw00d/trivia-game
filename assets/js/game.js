@@ -252,18 +252,18 @@ $(document).ready(function() {
         selectedAnswerArr: [],
         reset: function() {
             $questionsMessages
-                .html('Click Button to Start Trivia Quiz')
+                .text('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
-            $answerSubmit.html('Start Quiz');    
+            $answerSubmit.text('Start Quiz');    
         },
         startGameFunc: function() {
             if(!this.startGame) {
-                $answerSubmit.html('Submit Answer');
+                $answerSubmit.text('Submit Answer');
                 $timer.removeClass('d-none');
-                $timerSpan.html(this.timer25SecCountDownStart);
+                $timerSpan.text(this.timer25SecCountDownStart);
                 $questionsMessages
                     .addClass('font-italic')
-                    .html('Game Started!');
+                    .text('Game Started!');
                 this.startGame = true;  
             }
         },
@@ -293,7 +293,7 @@ $(document).ready(function() {
                 this.clockRunning = true;
             }
 
-            $timerSpan.html(current25SecCountDownTime);
+            $timerSpan.text(current25SecCountDownTime);
         },
         resetTime: function() {
             playGame.timer25SecCountDownStart = 26;
@@ -314,7 +314,7 @@ $(document).ready(function() {
                     $questionsQuestion
                         .empty()
                         .removeClass('d-none')
-                        .html(arrOfObjects[this.currentQuestionArrIndex].question);
+                        .text(arrOfObjects[this.currentQuestionArrIndex].question);
                     $questionsMultipleChoice
                         .removeClass('d-none')
                         .empty();
@@ -323,20 +323,32 @@ $(document).ready(function() {
                             .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
                     });                   
             }
+
+
+
         },
         ifAnswerSelected: function() {
             var selectedAnswer = Number($("input[name='question" + playGame.currentQuestionArrIndex + "']:checked").val());
-            if(selectedAnswer) {
+            if(typeof selectedAnswer === 'number') {
                 playGame.selectedAnswerArr.push(selectedAnswer);
                 playGame.clockRunning = false;
                 console.log(playGame.clockRunning);
+                playGame.answerChosen = true;
                 return selectedAnswer;
             }
+
         },
         showRightAnswer: function() {
-            var correctAnswerIndex = questionsAndAnswers[playGame.currentQuestionArrIndex].correctAnswer;
-            var correctAnswerAnswer = questionsAndAnswers[playGame.currentQuestionArrIndex].answers[correctAnswerIndex];
-            $questionsMessages.html('The correct answer is ' + abcdArr[correctAnswerIndex] + ':<br />' + correctAnswerAnswer); 
+            var selectedAnswer = playGame.ifAnswerSelected();
+            var correctAnswerIndex = questionsAndAnswers[this.currentQuestionArrIndex].correctAnswer;
+            
+            if(selectedAnswer === correctAnswerIndex) {
+                $questionsMessages.html('You are correct! The answer is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+            }
+            else {
+                $questionsMessages.html('You are wrong! The answer is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+            }
+            
         }
     };
 
@@ -349,8 +361,9 @@ $(document).ready(function() {
             playGame.startGameFunc();
             playGame.start25SecCountDown();
             playGame.populateQuestions(questionsAndAnswers);
+            playGame.answerChosen = true;
         }
-        else if(playGame.startGame && playGame.ifAnswerSelected()) {
+        else if(playGame.startGame && playGame.answerChosen) {
             playGame.resetTime();
             playGame.start25SecCountDown();
             playGame.showRightAnswer();
