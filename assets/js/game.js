@@ -265,7 +265,12 @@ $(document).ready(function() {
             $questionsMessages
                 .text('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
-            $answerSubmit.text('Start Quiz');    
+            $answerSubmit
+                .text('Start Quiz')
+                .removeClass('restart-game'); 
+            $questionsQuestion.attr('data-question-arr', '0');   
+            $allQuestionsAnswers.empty();
+            $questionsMultipleChoice.empty();
         },
         startGameFunc: function() {
             if(!this.startGame) {
@@ -317,21 +322,20 @@ $(document).ready(function() {
         },
         start25SecCountDown: function() {
             if (!this.clockRunning) {
-                console.log('inside start25SecCountDown');
                 clearInterval(this.intervalId);
                 this.intervalId = setInterval(playGame.countDown, 1000);
                 this.clockRunning = true;
             }
         },
         populateQuestions: function(arrOfObjects) {
-            this.currentQuestionArrIndex = Number($questionsQuestion.attr('data-question-arr'));
+            this.currentQuestionArrIndex = Number($questionsQuestion.attr('data-question-arr'));       
 
             switch(this.currentQuestionArrIndex) {
                 case 0:
                     $questionsQuestion
                         .empty()
                         .removeClass('d-none')
-                        .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                     $questionsMultipleChoice
                         .removeClass('d-none')
                         .empty();
@@ -344,7 +348,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -357,7 +361,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -383,7 +387,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -409,7 +413,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -422,7 +426,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -435,7 +439,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -448,7 +452,7 @@ $(document).ready(function() {
                         $questionsQuestion
                             .empty()
                             .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
                         $questionsMultipleChoice
                             .removeClass('d-none')
                             .empty();
@@ -458,9 +462,12 @@ $(document).ready(function() {
                         }); 
                         break;                    
                     case 10:
-                        clearInterval(playGame.intervalId);
                         playGame.clockRunning = false;
                         $timer.addClass('d-none');
+                        $answerSubmit
+                            .text('Restart Game')
+                            .addClass('restart-game');
+
                         for (var q in questionsAndAnswers) {
                             if(questionsAndAnswers[q].correctAnswer === questionsAndAnswers[q].yourAnswer) {
                                 var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were correct!';
@@ -470,14 +477,14 @@ $(document).ready(function() {
                             }
 
                             $allQuestionsAnswers.append(
-                                '<p><strong>Question:</strong> ' + questionsAndAnswers[q].question + '<br />' +
+                                '<p><strong>' + (questionsAndAnswers.indexOf(questionsAndAnswers[q]) + 1) + '.</strong> ' + questionsAndAnswers[q].question + '<br />' +
                                 correctOrWrong + '<br />' + 
                                 'The correct answer was:<br />' + 
                                 abcdArr[questionsAndAnswers[q].correctAnswer] + '. ' + 
                                 questionsAndAnswers[q].answers[questionsAndAnswers[q].correctAnswer] + '</p>'
                                 );
                         }
-                        console.log(questionsAndAnswers);
+                        
                         break;                    
                     
 
@@ -491,23 +498,23 @@ $(document).ready(function() {
             if(typeof selectedAnswer === 'number') {
                 playGame.selectedAnswerArr.push(selectedAnswer);
                 playGame.clockRunning = false;
-                console.log(playGame.clockRunning);
                 playGame.answerChosen = true;
                 return selectedAnswer;
             }
-
         },
         showRightAnswer: function() {
             var selectedAnswer = playGame.ifAnswerSelected();
-            var correctAnswerIndex = questionsAndAnswers[this.currentQuestionArrIndex].correctAnswer;
-            
-            if(selectedAnswer === correctAnswerIndex) {
-                $questionsMessages.html('You are correct! The answer to Question ' + (this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
-                questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
-            }
-            else {
-                $questionsMessages.html('You are wrong! The answer is to Question ' +(this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
-                questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
+
+            if(questionsAndAnswers[this.currentQuestionArrIndex]) {
+                var correctAnswerIndex = questionsAndAnswers[this.currentQuestionArrIndex].correctAnswer;
+                if(selectedAnswer === correctAnswerIndex) {
+                    $questionsMessages.html('You are correct! The answer to Question ' + (this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                    questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
+                }
+                else {
+                    $questionsMessages.html('You are wrong! The answer is to Question ' +(this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                    questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
+                }
             }
             
         }
@@ -518,6 +525,11 @@ $(document).ready(function() {
     }
 
     $answerSubmit.on('click', function() {
+        if($(this).hasClass('restart-game')) {
+            playGame.reset();
+            playGame.resetTime();
+        }
+
         if(!playGame.startGame && !playGame.answerChosen) {
             playGame.startGameFunc();
             playGame.start25SecCountDown();
@@ -534,6 +546,7 @@ $(document).ready(function() {
             $questionsQuestion.attr('data-question-arr',playGame.currentQuestionArrIndex);
             playGame.populateQuestions(questionsAndAnswers);
         }
+
 
     });
 
