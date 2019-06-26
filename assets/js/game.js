@@ -91,6 +91,13 @@ $(document).ready(function() {
     d. Marianne
     */
 
+    var abcdArr = [
+        'a',
+        'b',
+        'c',
+        'd'
+    ];
+
     // Questions and answers object
     var questionsAndAnswers = [
         {
@@ -237,24 +244,26 @@ $(document).ready(function() {
     var playGame = {
         startGame: false,
         currentQuestionArrIndex: 0,
-        timer25SecCountDownStart: 11,
+        timer25SecCountDownStart: 25,
         clockRunning: false,
+        answerChosen: false,
         convertedTime: 0,
         intervalId: 0,
+        selectedAnswerArr: [],
         reset: function() {
             $questionsMessages
-                .text('Click Button to Start Trivia Quiz')
+                .html('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
-            $answerSubmit.text('Start Quiz');    
+            $answerSubmit.html('Start Quiz');    
         },
         startGameFunc: function() {
             if(!this.startGame) {
-                $answerSubmit.text('Submit Answer');
+                $answerSubmit.html('Submit Answer');
                 $timer.removeClass('d-none');
-                $timerSpan.text(this.timer25SecCountDownStart);
+                $timerSpan.html(this.timer25SecCountDownStart);
                 $questionsMessages
                     .addClass('font-italic')
-                    .text('Game Started!');
+                    .html('Game Started!');
                 this.startGame = true;  
             }
         },
@@ -279,12 +288,19 @@ $(document).ready(function() {
             if(current25SecCountDownTime === '00') {
                 // Stop time at 0 or '00'
                 clearInterval(playGame.intervalId);
+                this.clockRunning = false;
+                setInterval(playGame.intervalId);
+                this.clockRunning = true;
             }
 
-            $timerSpan.text(current25SecCountDownTime);
+            $timerSpan.html(current25SecCountDownTime);
+        },
+        resetTime: function() {
+            playGame.timer25SecCountDownStart = 26;
         },
         start25SecCountDown: function() {
             if (!this.clockRunning) {
+                console.log('inside start25SecCountDown');
                 clearInterval(this.intervalId);
                 this.intervalId = setInterval(playGame.countDown, 1000);
                 this.clockRunning = true;
@@ -292,18 +308,35 @@ $(document).ready(function() {
         },
         populateQuestions: function(arrOfObjects) {
             this.currentQuestionArrIndex = Number($questionsQuestion.attr('data-question-arr'));
+
             switch(this.currentQuestionArrIndex) {
                 case 0:
                     $questionsQuestion
+                        .empty()
                         .removeClass('d-none')
-                        .text(questionsAndAnswers[this.currentQuestionArrIndex].question);
-                    $questionsMultipleChoice.removeClass('d-none');
-                    questionsAndAnswers[this.currentQuestionArrIndex].answers.map(function(answer) {
+                        .html(arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .append('<li>' + answer + '</li>');
-                    });
-                    break;
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    });                   
             }
+        },
+        ifAnswerSelected: function() {
+            var selectedAnswer = Number($("input[name='question" + playGame.currentQuestionArrIndex + "']:checked").val());
+            if(selectedAnswer) {
+                playGame.selectedAnswerArr.push(selectedAnswer);
+                playGame.clockRunning = false;
+                console.log(playGame.clockRunning);
+                return selectedAnswer;
+            }
+        },
+        showRightAnswer: function() {
+            var correctAnswerIndex = questionsAndAnswers[playGame.currentQuestionArrIndex].correctAnswer;
+            var correctAnswerAnswer = questionsAndAnswers[playGame.currentQuestionArrIndex].answers[correctAnswerIndex];
+            $questionsMessages.html('The correct answer is ' + abcdArr[correctAnswerIndex] + ':<br />' + correctAnswerAnswer); 
         }
     };
 
@@ -312,9 +345,19 @@ $(document).ready(function() {
     }
 
     $answerSubmit.on('click', function() {
-        playGame.startGameFunc();
-        playGame.start25SecCountDown();
-        playGame.populateQuestions(questionsAndAnswers);
+        if(!playGame.startGame && !playGame.answerChosen) {
+            playGame.startGameFunc();
+            playGame.start25SecCountDown();
+            playGame.populateQuestions(questionsAndAnswers);
+        }
+        else if(playGame.startGame && playGame.ifAnswerSelected()) {
+            playGame.resetTime();
+            playGame.start25SecCountDown();
+            playGame.showRightAnswer();
+        }
+
     });
+
+
 
 });
