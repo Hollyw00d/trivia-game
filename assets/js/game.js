@@ -260,7 +260,7 @@ $(document).ready(function() {
         answerChosen: false,
         convertedTime: 0,
         intervalId: 0,
-        selectedAnswerArr: [],
+        correctAnswerAnswerCount: 0,
         reset: function() {
             $questionsMessages
                 .text('Click Button to Start Trivia Quiz')
@@ -271,6 +271,12 @@ $(document).ready(function() {
             $questionsQuestion.attr('data-question-arr', '0');   
             $allQuestionsAnswers.empty();
             $questionsMultipleChoice.empty();
+            $questionsQuestion
+                .empty()
+                .attr('data-question-arr', '0');
+        },
+        resetReload: function() {
+            location.reload();
         },
         startGameFunc: function() {
             if(!this.startGame) {
@@ -305,8 +311,6 @@ $(document).ready(function() {
                 // Stop time at 0 or '00'
                 clearInterval(playGame.intervalId);
                 this.clockRunning = false;
-                // setInterval(playGame.intervalId);
-                // this.clockRunning = true;
                 playGame.showRightAnswer();
                 playGame.currentQuestionArrIndex++;
                 $questionsQuestion.attr('data-question-arr',playGame.currentQuestionArrIndex);
@@ -344,159 +348,157 @@ $(document).ready(function() {
                             .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
                     }); 
                     break;
-                    case 1:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                case 1:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 2:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 2:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 3:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 3:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 4:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 4:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 5:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text(arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 5:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 6:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 6:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 7:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 7:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 8:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 8:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 9:
-                        $questionsQuestion
-                            .empty()
-                            .removeClass('d-none')
-                            .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 9:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
                         $questionsMultipleChoice
-                            .removeClass('d-none')
-                            .empty();
-                        arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
-                            $questionsMultipleChoice
-                                .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
-                        }); 
-                        break;                    
-                    case 10:
-                        playGame.clockRunning = false;
-                        $timer.addClass('d-none');
-                        $answerSubmit
-                            .text('Restart Game')
-                            .addClass('restart-game');
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 10:
+                    playGame.clockRunning = false;
+                    $timer.addClass('d-none');
+                    $answerSubmit
+                        .text('Restart Game')
+                        .addClass('restart-game');
 
-                        for (var q in questionsAndAnswers) {
-                            if(questionsAndAnswers[q].correctAnswer === questionsAndAnswers[q].yourAnswer) {
-                                var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were correct!';
-                            }
-                            else {
-                                var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were wrong!';
-                            }
 
-                            $allQuestionsAnswers.append(
-                                '<p><strong>' + (questionsAndAnswers.indexOf(questionsAndAnswers[q]) + 1) + '.</strong> ' + questionsAndAnswers[q].question + '<br />' +
-                                correctOrWrong + '<br />' + 
-                                'The correct answer was:<br />' + 
-                                abcdArr[questionsAndAnswers[q].correctAnswer] + '. ' + 
-                                questionsAndAnswers[q].answers[questionsAndAnswers[q].correctAnswer] + '</p>'
-                                );
+
+                    for (var q in questionsAndAnswers) {
+                        if(questionsAndAnswers[q].correctAnswer === questionsAndAnswers[q].yourAnswer) {
+                            var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were correct!';
                         }
-                        
-                        break;                    
-                    
+                        else if(!abcdArr[questionsAndAnswers[q].yourAnswer]) {
+                            var correctOrWrong = 'You did not answer the question!';
+                        }
+                        else {
+                            var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were wrong!';
+                        }
 
+                        $allQuestionsAnswers.append(
+                            '<p><strong>' + (questionsAndAnswers.indexOf(questionsAndAnswers[q]) + 1) + '.</strong> ' + questionsAndAnswers[q].question + '<br />' +
+                            correctOrWrong + '<br />' + 
+                            'The correct answer was:<br />' + 
+                            abcdArr[questionsAndAnswers[q].correctAnswer] + '. ' + 
+                            questionsAndAnswers[q].answers[questionsAndAnswers[q].correctAnswer] + '</p>'
+                            );
+                    } 
+                    break;                    
             }
-
-
-
         },
         ifAnswerSelected: function() {
             var selectedAnswer = Number($("input[name='question" + playGame.currentQuestionArrIndex + "']:checked").val());
             if(typeof selectedAnswer === 'number') {
-                playGame.selectedAnswerArr.push(selectedAnswer);
                 playGame.clockRunning = false;
                 playGame.answerChosen = true;
                 return selectedAnswer;
@@ -508,6 +510,7 @@ $(document).ready(function() {
             if(questionsAndAnswers[this.currentQuestionArrIndex]) {
                 var correctAnswerIndex = questionsAndAnswers[this.currentQuestionArrIndex].correctAnswer;
                 if(selectedAnswer === correctAnswerIndex) {
+                    playGame.correctAnswerAnswerCount++;
                     $questionsMessages.html('You are correct! The answer to Question ' + (this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
                     questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
                 }
@@ -526,8 +529,7 @@ $(document).ready(function() {
 
     $answerSubmit.on('click', function() {
         if($(this).hasClass('restart-game')) {
-            playGame.reset();
-            playGame.resetTime();
+            playGame.resetReload();
         }
 
         if(!playGame.startGame && !playGame.answerChosen) {
