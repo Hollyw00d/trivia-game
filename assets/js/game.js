@@ -4,10 +4,10 @@ $(document).ready(function() {
     var $timer = $('#timer');
     var $timerSpan = $timer.find('span');
     var $questionsMessages = $('#questions-messages');
-    var $questionsHeading = $('#questions-heading');
     var $questionsQuestion = $('#questions-question');
-    var questionsMultipleChoice = $('#questions-multiple-choice');
+    var $questionsMultipleChoice = $('#questions-multiple-choice');
     var $answerSubmit = $('#answer-submit');
+    var $allQuestionsAnswers = $('#all-questions-answers');
 
     /*
     "Anchor Man" movie trivia quiz
@@ -92,6 +92,13 @@ $(document).ready(function() {
     d. Marianne
     */
 
+    var abcdArr = [
+        'a',
+        'b',
+        'c',
+        'd'
+    ];
+
     // Questions and answers object
     var questionsAndAnswers = [
         {
@@ -106,7 +113,8 @@ $(document).ready(function() {
                 "Hey, everyone! Come and see how good I look!"
             ],
             // index of answers array
-            correctAnswer: 0
+            correctAnswer: 0,
+            yourAnswer: ''
         },
         {
             // Question 2
@@ -119,7 +127,8 @@ $(document).ready(function() {
                 "Beverly",
                 "Marianne"
             ],
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 3
@@ -133,7 +142,8 @@ $(document).ready(function() {
                 "A wannabe"
             ],
             // index of answers array
-            correctAnswer: 1
+            correctAnswer: 1,
+            yourAnswer: ''
         },
         {
             // Question 4
@@ -147,7 +157,8 @@ $(document).ready(function() {
                 "We Spit in Your Food"
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 5
@@ -161,7 +172,8 @@ $(document).ready(function() {
                 "Communications"
             ],
             // index of answers array
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 6
@@ -175,7 +187,8 @@ $(document).ready(function() {
                 "Baxter"
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 7
@@ -189,7 +202,8 @@ $(document).ready(function() {
                 "ANCHOR"
             ],
             // index of answers array
-            correctAnswer: 2
+            correctAnswer: 2,
+            yourAnswer: ''
         },
         {
             // Question 8
@@ -203,7 +217,8 @@ $(document).ready(function() {
                 "Jazz trumpet"
             ],
             // index of answers array
-            correctAnswer: 1
+            correctAnswer: 1,
+            yourAnswer: ''
         },
         {
             // Question 9
@@ -217,7 +232,8 @@ $(document).ready(function() {
                 "Throw a man into a car windshield that breaks."
             ],
             // index of answers array
-            correctAnswer: 3
+            correctAnswer: 3,
+            yourAnswer: ''
         },
         {
             // Question 10
@@ -231,37 +247,52 @@ $(document).ready(function() {
                 "Where do you work, a toilet store?"
             ],
             // index of answers array
-            correctAnswer: 0
+            correctAnswer: 0,
+            yourAnswer: ''
         }
     ];
 
     var playGame = {
         startGame: false,
-        questionCount: 0,
+        currentQuestionArrIndex: 0,
         timer25SecCountDownStart: 25,
         clockRunning: false,
+        answerChosen: false,
         convertedTime: 0,
         intervalId: 0,
+        correctAnswerAnswerCount: 0,
         reset: function() {
             $questionsMessages
                 .text('Click Button to Start Trivia Quiz')
                 .removeClass('d-none');
-            $answerSubmit.text('Start Quiz');    
+            $answerSubmit
+                .text('Start Quiz')
+                .removeClass('restart-game'); 
+            $questionsQuestion.attr('data-question-arr', '0');   
+            $allQuestionsAnswers.empty();
+            $questionsMultipleChoice.empty();
+            $questionsQuestion
+                .empty()
+                .attr('data-question-arr', '0');
+        },
+        resetReload: function() {
+            location.reload();
         },
         startGameFunc: function() {
             if(!this.startGame) {
                 $answerSubmit.text('Submit Answer');
-                $timer.removeClass('d-none')
-                $timerSpan.text(25);
+                $timer.removeClass('d-none');
+                $timerSpan.text(this.timer25SecCountDownStart);
+                $questionsMessages
+                    .addClass('font-italic')
+                    .text('Game Started!');
                 this.startGame = true;  
-                this.false = true;
             }
         },
         timeConverter: function(t) {
             //  Takes the current time in seconds 
             // and convert it to seconds with two digits (ss).
             var seconds = t;  
-            console.log(seconds);  
             if (seconds < 10) {
                 seconds = '0' + seconds;
             }
@@ -270,21 +301,225 @@ $(document).ready(function() {
         countDown: function() {
             playGame.timer25SecCountDownStart--;
             playGame.convertedTime = playGame.timeConverter(playGame.timer25SecCountDownStart);
-            console.log(playGame.convertedTime);
-            $timerSpan.text(playGame.timeConverter(playGame.convertedTime));
+
+            var current25SecCountDownTime = playGame.timeConverter(playGame.convertedTime);
+
+            if(current25SecCountDownTime.length === 3) {
+                current25SecCountDownTime = current25SecCountDownTime.slice(1);
+            }
+            if(current25SecCountDownTime === '00') {
+                // Stop time at 0 or '00'
+                clearInterval(playGame.intervalId);
+                this.clockRunning = false;
+                playGame.showRightAnswer();
+                playGame.currentQuestionArrIndex++;
+                $questionsQuestion.attr('data-question-arr',playGame.currentQuestionArrIndex);
+                playGame.populateQuestions(questionsAndAnswers);
+                playGame.timer25SecCountDownStart = 26;
+                playGame.start25SecCountDown();
+            }
+
+            $timerSpan.text(current25SecCountDownTime);
+        },
+        resetTime: function() {
+            playGame.timer25SecCountDownStart = 26;
         },
         start25SecCountDown: function() {
-            // if (!clockRunning) {
-            //     clearInterval(intervalId);
-            //     intervalId = setInterval(count, 1000);
-            //     clockRunning = true;
-            //   }
-
             if (!this.clockRunning) {
                 clearInterval(this.intervalId);
                 this.intervalId = setInterval(playGame.countDown, 1000);
                 this.clockRunning = true;
             }
+        },
+        populateQuestions: function(arrOfObjects) {
+            this.currentQuestionArrIndex = Number($questionsQuestion.attr('data-question-arr'));       
+
+            switch(this.currentQuestionArrIndex) {
+                case 0:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;
+                case 1:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 2:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 3:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 4:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 5:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 6:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 7:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 8:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 9:
+                    $questionsQuestion
+                        .empty()
+                        .removeClass('d-none')
+                        .text((this.currentQuestionArrIndex + 1) + '.' + arrOfObjects[this.currentQuestionArrIndex].question);
+                    $questionsMultipleChoice
+                        .removeClass('d-none')
+                        .empty();
+                    arrOfObjects[this.currentQuestionArrIndex].answers.map(function(answer, index) {
+                        $questionsMultipleChoice
+                            .append('<li><label><input type="radio" name="question' + playGame.currentQuestionArrIndex + '" value="' + index + '">' + answer + '</label></li>');
+                    }); 
+                    break;                    
+                case 10:
+                    playGame.clockRunning = false;
+                    $timer.addClass('d-none');
+                    $answerSubmit
+                        .text('Restart Game')
+                        .addClass('restart-game');
+
+
+
+                    for (var q in questionsAndAnswers) {
+                        if(questionsAndAnswers[q].correctAnswer === questionsAndAnswers[q].yourAnswer) {
+                            var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were correct!';
+                        }
+                        else if(!abcdArr[questionsAndAnswers[q].yourAnswer]) {
+                            var correctOrWrong = 'You did not answer the question!';
+                        }
+                        else {
+                            var correctOrWrong = 'You answered ' + abcdArr[questionsAndAnswers[q].yourAnswer] + ' and were wrong!';
+                        }
+
+                        $allQuestionsAnswers.append(
+                            '<p><strong>' + (questionsAndAnswers.indexOf(questionsAndAnswers[q]) + 1) + '.</strong> ' + questionsAndAnswers[q].question + '<br />' +
+                            correctOrWrong + '<br />' + 
+                            'The correct answer was:<br />' + 
+                            abcdArr[questionsAndAnswers[q].correctAnswer] + '. ' + 
+                            questionsAndAnswers[q].answers[questionsAndAnswers[q].correctAnswer] + '</p>'
+                            );
+                    } 
+                    break;                    
+            }
+        },
+        ifAnswerSelected: function() {
+            var selectedAnswer = Number($("input[name='question" + playGame.currentQuestionArrIndex + "']:checked").val());
+            if(typeof selectedAnswer === 'number') {
+                playGame.clockRunning = false;
+                playGame.answerChosen = true;
+                return selectedAnswer;
+            }
+        },
+        showRightAnswer: function() {
+            var selectedAnswer = playGame.ifAnswerSelected();
+
+            if(questionsAndAnswers[this.currentQuestionArrIndex]) {
+                var correctAnswerIndex = questionsAndAnswers[this.currentQuestionArrIndex].correctAnswer;
+                if(selectedAnswer === correctAnswerIndex) {
+                    playGame.correctAnswerAnswerCount++;
+                    $questionsMessages.html('You are correct! The answer to Question ' + (this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                    questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
+                }
+                else {
+                    $questionsMessages.html('You are wrong! The answer is to Question ' +(this.currentQuestionArrIndex + 1) + ' is ' + abcdArr[correctAnswerIndex] + ':<br />' + questionsAndAnswers[this.currentQuestionArrIndex].answers[correctAnswerIndex]);
+                    questionsAndAnswers[this.currentQuestionArrIndex].yourAnswer = selectedAnswer;
+                }
+            }
+            
         }
     };
 
@@ -293,8 +528,30 @@ $(document).ready(function() {
     }
 
     $answerSubmit.on('click', function() {
-        playGame.startGameFunc();
-        playGame.start25SecCountDown();
+        if($(this).hasClass('restart-game')) {
+            playGame.resetReload();
+        }
+
+        if(!playGame.startGame && !playGame.answerChosen) {
+            playGame.startGameFunc();
+            playGame.start25SecCountDown();
+            playGame.populateQuestions(questionsAndAnswers);
+            playGame.answerChosen = true;
+        }
+        else if(playGame.startGame && playGame.answerChosen) {
+            playGame.resetTime();
+            playGame.start25SecCountDown();
+            if(playGame.currentQuestionArrIndex <= 9) {
+                playGame.showRightAnswer();
+            }
+            playGame.currentQuestionArrIndex++;
+            $questionsQuestion.attr('data-question-arr',playGame.currentQuestionArrIndex);
+            playGame.populateQuestions(questionsAndAnswers);
+        }
+
+
     });
+
+
 
 });
